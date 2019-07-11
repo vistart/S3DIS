@@ -27,7 +27,7 @@ class S3DIS:
     def check_dir_exists(path):
         if os.path.exists(path):
             return True
-        raise FileNotFoundError("The directory or file specified to hold the points of room does not exist."
+        raise FileNotFoundError("The specified directory or file ({0}) does not exist.".format(str(path)) +
                                 " Please confirm that the provided parameters are correct.")
 
     @classmethod
