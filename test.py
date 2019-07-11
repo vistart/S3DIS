@@ -43,5 +43,5 @@ if os.path.isdir(s3dis.dir_data):
 else:
     print(s3dis.dir_data, " is not a valid directory.")
 """
-
-print(s3dis.get_room_points())
+print((s3dis.get_all_annotations_points()))
+# print(len(s3dis.get_room_points()))

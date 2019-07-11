@@ -20,7 +20,11 @@ class S3DIS:
     dir_areas = ["Area_1", "Area_2", "Area_3", "Area_4", "Area_5", "Area_6"]
 
     @classmethod
-    def __init__(cls, dir_data):
+    def __init__(cls, dir_data="data"):
+        """
+
+        :param dir_data:
+        """
         cls.dir_data = dir_data
 
     @staticmethod
@@ -78,19 +82,33 @@ class S3DIS:
         :param room_no:
         :return:
         """
+        dir_annotations = os.path.join(cls.dir_data,
+                                       "Area_{0}".format(area_no),
+                                       "{0}_{1}".format(room_name, room_no),
+                                       "Annotations")
+        annotations = []
+        for filename_annotation in os.listdir(dir_annotations):
+            if os.path.splitext(filename_annotation)[1] != '.txt':
+                print("Invalid annotation file: {0}".format(filename_annotation))
+                continue
+            annotations.append(cls.get_annotation_points(area_no, room_name, room_no,
+                                                         annotation_tag=filename_annotation))
+        return annotations
 
     @classmethod
     def get_annotation_points(cls,
                               area_no=1,
                               room_name="conferenceRoom",
                               room_no=1,
+                              annotation_tag=None,
                               annotation_name="beam",
-                              annotation_no=1):
+                              annotation_no=1,):
         """
 
         :param area_no:
         :param room_name:
         :param room_no:
+        :param annotation_tag:
         :param annotation_name:
         :param annotation_no:
         :return:
@@ -99,6 +117,7 @@ class S3DIS:
                                 "Area_{0}".format(area_no),
                                 "{0}_{1}".format(room_name, room_no),
                                 "Annotations",
-                                "{0}_{1}.txt".format(annotation_name, annotation_no))
+                                annotation_tag if annotation_tag is None else "{0}_{1}.txt".format(annotation_name,
+                                                                                                   annotation_no))
         cls.check_dir_exists(filename)
         return np.loadtxt(filename)
