@@ -23,6 +23,50 @@ def s3dis():
     return s3dis
 
 
-def test_get_annotation_points(s3dis):
-    assert s3dis.dir_data == os.path.join("..", "data")
-    assert len(s3dis.get_areas_dir(1)) > 0
+@pytest.mark.skip
+def test_room_points_unique(s3dis):
+    """
+    Check that the points that appear in a single file are not duplicated at all.
+    :param s3dis:
+    :return:
+    """
+    for area in s3dis.get_all_areas_list():
+        area = "Area_1"
+        print("————{0}————".format(area))
+        for room in s3dis.get_all_rooms_list(area):
+            points = (s3dis.get_room_points(area=area, room=room))
+            print("{0} | Lines {1} | PASSED.".format(room, len(points)))
+            points = s3dis.get_all_annotations_points(area=area, room=room)
+            count = 0
+            for point in points:
+                count = count + len(point)
+            print("{0} | Annotations Lines {1} | PASSED.".format(room, count))
+        print("————{0}————".format(area))
+    return True
+
+
+def test_unique(s3dis):
+    sub_set = s3dis.get_annotation_points(area="Area_1", room="conferenceRoom_1", annotation_tag="beam_1")
+    length = len(sub_set)
+    import numpy as np
+    unique, unique_indices, unique_counts = (np.unique(sub_set, return_counts=True, return_index=True, axis=0))
+    for i in range(len(unique_counts)):
+        if unique_counts[i] > 1:
+            print(i, unique_indices[i])
+    return True
+
+
+@pytest.mark.skip
+def test_subset(s3dis):
+    complete_set = s3dis.get_room_points(area="Area_1", room="conferenceRoom_1")
+    sub_set = s3dis.get_annotation_points(area="Area_1", room="conferenceRoom_1", annotation_tag="beam_1")
+    import numpy as np
+    checked_index = []
+    line = 0
+    for point in sub_set:
+        assert point in complete_set
+        line = line + 1
+        if line % 100 == 1:
+            print(line)
+    print(checked_index)
+    return True

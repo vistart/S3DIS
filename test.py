@@ -43,5 +43,14 @@ if os.path.isdir(s3dis.dir_data):
 else:
     print(s3dis.dir_data, " is not a valid directory.")
 """
-print((s3dis.get_all_annotations_points()))
+"""
+count_point = 0
+points = s3dis.get_all_annotations_points()
+print(len(points))
+for anno in points:
+    count_point = count_point + len(anno)
+
+print(count_point)
 # print(len(s3dis.get_room_points()))
+"""
+print(s3dis.get_all_rooms_list("Area_2"))
