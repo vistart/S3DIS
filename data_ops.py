@@ -122,7 +122,7 @@ class S3DIS:
                                                room=room,
                                                room_name=room_name,
                                                room_no=room_no,
-                                               annotation_tag=filename_annotation)
+                                               annotation_tag=os.path.splitext(filename_annotation)[0])
             # print("File: {0} | Length: {1}".format(filename_annotation, len(points)))
             annotations.append(points)
         return np.array(annotations)
