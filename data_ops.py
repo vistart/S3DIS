@@ -57,7 +57,13 @@ class S3DIS:
         :return:
         """
         path = os.path.join(cls.dir_data, area if area is not None else "Area_{0}".format(area_no))
-        return os.listdir(path)
+        if not os.path.isdir(path):
+            raise NotADirectoryError('The path({0}) is not a valid directory.'.format(path))
+        room_list = os.listdir(path)
+        for room in room_list:
+            if os.path.isfile(os.path.join(cls.dir_data, area, room)):
+                room_list.remove(room)
+        return room_list
 
     @classmethod
     def get_room_points(cls,
