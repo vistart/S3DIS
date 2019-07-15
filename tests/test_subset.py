@@ -57,6 +57,25 @@ def test_unique(s3dis):
 
 
 @pytest.mark.skip
+def test_no_intersection_between_any_two_collections(s3dis):
+    complete_set = s3dis.get_room_points(area="Area_1", room="conferenceRoom_1")
+    assert len(complete_set) > 0
+    all_sub_sets = s3dis.get_all_annotations_points(area="Area_1", room="conferenceRoom_1")
+    assert len(all_sub_sets) > 0
+    import numpy as np
+    diff_complete_set = len(complete_set) - len(np.unique(complete_set, axis=0))
+    print(len(complete_set), len(np.unique(complete_set, axis=0)))
+    diff_sub_sets = 0
+    total = 0
+    for i in range(len(all_sub_sets)):
+        total = total + len(all_sub_sets[i])
+        diff_sub_sets = diff_sub_sets + len(all_sub_sets[i]) - len(np.unique(all_sub_sets[i], axis=0))
+    assert len(complete_set) == total
+    assert diff_complete_set == diff_sub_sets
+    return True
+
+
+@pytest.mark.skip
 def test_subset(s3dis):
     complete_set = s3dis.get_room_points(area="Area_1", room="conferenceRoom_1")
     sub_set = s3dis.get_annotation_points(area="Area_1", room="conferenceRoom_1", annotation_tag="beam_1")
