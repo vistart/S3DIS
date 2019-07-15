@@ -23,28 +23,29 @@ def s3dis():
     return s3dis
 
 
-@pytest.mark.skip
-def test_room_points_unique(s3dis):
+def test_total_points_of_room_is_equal_to_sum_of_all_subsets(s3dis):
     """
-    Check that the points that appear in a single file are not duplicated at all.
+    Check that the total points of room is equal to the sum of all subsets.
     :param s3dis:
     :return:
     """
     for area in s3dis.get_all_areas_list():
-        area = "Area_1"
+        # area = "Area_1"
         print("————{0}————".format(area))
+        print(s3dis.get_all_rooms_list(area))
         for room in s3dis.get_all_rooms_list(area):
-            points = (s3dis.get_room_points(area=area, room=room))
-            print("{0} | Lines {1} | PASSED.".format(room, len(points)))
+            total = len(s3dis.get_room_points(area=area, room=room))
             points = s3dis.get_all_annotations_points(area=area, room=room)
             count = 0
             for point in points:
                 count = count + len(point)
+            assert total == count
             print("{0} | Annotations Lines {1} | PASSED.".format(room, count))
         print("————{0}————".format(area))
     return True
 
 
+@pytest.mark.skip
 def test_unique(s3dis):
     sub_set = s3dis.get_annotation_points(area="Area_1", room="conferenceRoom_1", annotation_tag="beam_1")
     length = len(sub_set)
